@@ -1,12 +1,30 @@
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+}
+
 plugins {
-    id "java"
-    id "org.springframework.boot" version "1.5.4.RELEASE"
+    id 'java'
+    id 'org.springframework.boot' version '1.5.4.RELEASE'
+    id 'org.jetbrains.kotlin.jvm' version '1.1.4-3'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.1.4-3'
 }
 
 repositories {
     mavenCentral()
 }
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile 'org.springframework.boot:spring-boot-starter-web'
 }
