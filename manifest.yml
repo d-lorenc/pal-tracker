@@ -2,4 +2,5 @@
 applications:
 - name: pal-tracker
   path: build/libs/pal-tracker.jar
+  buildpack: java-buildpack
   random-route: true
