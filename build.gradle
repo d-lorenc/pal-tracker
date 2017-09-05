@@ -27,4 +27,14 @@ compileTestKotlin {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'org.springframework.boot:spring-boot-starter-web'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+bootRun.environment([
+        "WELCOME_MESSAGE": "hello",
+])
+
+test.environment([
+        "WELCOME_MESSAGE": "Hello from test",
+])
+
