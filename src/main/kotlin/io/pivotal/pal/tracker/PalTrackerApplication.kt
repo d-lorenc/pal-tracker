@@ -2,9 +2,15 @@ package io.pivotal.pal.tracker
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
-class PalTrackerApplication
+class PalTrackerApplication {
+    @Bean
+    fun timeEntryRepository(): TimeEntryRepository {
+        return InMemoryTimeEntryRepository()
+    }
+}
 
 fun main(args: Array<String>) {
     SpringApplication.run(PalTrackerApplication::class.java, *args)
