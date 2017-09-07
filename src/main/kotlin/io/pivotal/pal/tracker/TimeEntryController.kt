@@ -19,7 +19,7 @@ class TimeEntryController(private val timeEntriesRepo: TimeEntryRepository) {
     fun create(@RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry> {
         val createdTimeEntry = timeEntriesRepo.create(timeEntry)
 
-        return ResponseEntity(createdTimeEntry, HttpStatus.CREATED)
+        return ResponseEntity(createdTimeEntry!!, HttpStatus.CREATED)
     }
 
     @GetMapping("{id}")
