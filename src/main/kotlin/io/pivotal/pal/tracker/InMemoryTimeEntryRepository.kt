@@ -1,29 +1,26 @@
 package io.pivotal.pal.tracker
 
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 
 class InMemoryTimeEntryRepository : TimeEntryRepository {
 
     private val timeEntries = HashMap<Long, TimeEntry>()
 
     override fun create(timeEntry: TimeEntry): TimeEntry {
-        timeEntry.id = (timeEntries.size + 1).toLong()
-        timeEntries.put(timeEntry.id, timeEntry)
-        return timeEntry
+        val updatedTimeEntry = timeEntry.copy(id = (timeEntries.size + 1).toLong())
+        timeEntries[updatedTimeEntry.id!!] = updatedTimeEntry
+        return updatedTimeEntry
     }
 
-    override fun find(id: Long): TimeEntry? {
-        return timeEntries.get(id)
-    }
+    override fun find(id: Long) = timeEntries[id]
 
-    override fun list(): List<TimeEntry> {
-        return ArrayList(timeEntries.values)
-    }
+    override fun list() = ArrayList(timeEntries.values)
 
     override fun update(id: Long, timeEntry: TimeEntry): TimeEntry {
-        timeEntries.replace(id, timeEntry)
-        timeEntry.id = id
-        return timeEntry
+        val updatedTimeEntry = timeEntry.copy(id = id)
+        timeEntries.replace(id, updatedTimeEntry)
+        return updatedTimeEntry
     }
 
     override fun delete(id: Long) {

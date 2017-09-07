@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication
 class PalTrackerApplication {
     @Bean
-    fun timeEntryRepository(): TimeEntryRepository {
-        return InMemoryTimeEntryRepository()
-    }
+    fun timeEntryRepository() = InMemoryTimeEntryRepository()
 }
 
 fun main(args: Array<String>) {
