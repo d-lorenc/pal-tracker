@@ -33,9 +33,7 @@ class TimeEntryController(private val timeEntriesRepo: TimeEntryRepository) {
     }
 
     @GetMapping
-    fun list(): ResponseEntity<List<TimeEntry>> {
-        return ResponseEntity(timeEntriesRepo.list(), HttpStatus.OK)
-    }
+    fun list() = ResponseEntity(timeEntriesRepo.list(), HttpStatus.OK)
 
     @PutMapping("{id}")
     fun update(@PathVariable id: Long, @RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry> {

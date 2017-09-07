@@ -17,7 +17,7 @@ class InMemoryTimeEntryRepository : TimeEntryRepository {
 
     override fun list() = ArrayList(timeEntries.values)
 
-    override fun update(id: Long, timeEntry: TimeEntry): TimeEntry {
+    override fun update(id: Long, timeEntry: TimeEntry): TimeEntry? {
         val updatedTimeEntry = timeEntry.copy(id = id)
         timeEntries.replace(id, updatedTimeEntry)
         return updatedTimeEntry
