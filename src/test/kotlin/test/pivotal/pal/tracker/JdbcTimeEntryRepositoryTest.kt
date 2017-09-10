@@ -31,7 +31,7 @@ class JdbcTimeEntryRepositoryTest {
         val newTimeEntry = TimeEntry(123, 321, "today", 8)
         val entry = subject.create(newTimeEntry)
 
-        val foundEntry = jdbcTemplate.queryForMap("Select * from time_entries where id = ?", entry!!.id)
+        val foundEntry = jdbcTemplate.queryForMap("Select * from time_entries where id = ?", entry.id)
 
         assertThat(foundEntry["id"]).isEqualTo(entry.id)
         assertThat(foundEntry["project_id"]).isEqualTo(123L)
@@ -45,7 +45,7 @@ class JdbcTimeEntryRepositoryTest {
         val newTimeEntry = TimeEntry(123, 321, "today", 8)
         val entry = subject.create(newTimeEntry)
 
-        assertThat(entry!!.id).isNotNull()
+        assertThat(entry.id).isNotNull()
         assertThat(entry.projectId).isEqualTo(123)
         assertThat(entry.userId).isEqualTo(321)
         assertThat(entry.date).isEqualTo("today")
@@ -133,7 +133,6 @@ class JdbcTimeEntryRepositoryTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun deleteRemovesTheRecord() {
         jdbcTemplate.execute(
                 "INSERT INTO time_entries (id, project_id, user_id, date, hours) " + "VALUES (999, 123, 321, 'today', 8)"

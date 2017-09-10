@@ -40,7 +40,6 @@ class TimeEntryApiTest {
     fun testCreate() {
         val createResponse = restTemplate.postForEntity("/time-entries", timeEntry, String::class.java)
 
-
         assertThat(createResponse.statusCode).isEqualTo(HttpStatus.CREATED)
 
         val createJson = parse(createResponse.body)
@@ -55,9 +54,7 @@ class TimeEntryApiTest {
     fun testList() {
         val id = createTimeEntry()
 
-
         val listResponse = restTemplate.getForEntity("/time-entries", String::class.java)
-
 
         assertThat(listResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -74,9 +71,7 @@ class TimeEntryApiTest {
     fun testRead() {
         val id = createTimeEntry()
 
-
         val readResponse = this.restTemplate.getForEntity("/time-entries/" + id!!, String::class.java)
-
 
         assertThat(readResponse.statusCode).isEqualTo(HttpStatus.OK)
         val readJson = parse(readResponse.body)
@@ -92,9 +87,7 @@ class TimeEntryApiTest {
         val id = createTimeEntry()
         val updatedTimeEntry = TimeEntry(2, 3, "tomorrow", 9)
 
-
         val updateResponse = restTemplate.exchange("/time-entries/" + id!!, HttpMethod.PUT, HttpEntity(updatedTimeEntry, null), String::class.java)
-
 
         assertThat(updateResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -110,9 +103,7 @@ class TimeEntryApiTest {
     fun testDelete() {
         val id = createTimeEntry()
 
-
         val deleteResponse = restTemplate.exchange("/time-entries/" + id!!, HttpMethod.DELETE, null, String::class.java)
-
 
         assertThat(deleteResponse.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
 
@@ -120,7 +111,6 @@ class TimeEntryApiTest {
         assertThat(deletedReadResponse.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
     }
 
-    private fun createTimeEntry(): Long? {
-        return restTemplate.postForObject("/time-entries", timeEntry, TimeEntry::class.java).id
-    }
+    private fun createTimeEntry() =
+            restTemplate.postForObject("/time-entries", timeEntry, TimeEntry::class.java).id
 }

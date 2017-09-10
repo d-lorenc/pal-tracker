@@ -16,11 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class TimeEntryController(private val timeEntriesRepo: TimeEntryRepository) {
 
     @PostMapping
-    fun create(@RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry> {
-        val createdTimeEntry = timeEntriesRepo.create(timeEntry)
-
-        return ResponseEntity(createdTimeEntry!!, HttpStatus.CREATED)
-    }
+    fun create(@RequestBody timeEntry: TimeEntry) = ResponseEntity(timeEntriesRepo.create(timeEntry), HttpStatus.CREATED)
 
     @GetMapping("{id}")
     fun read(@PathVariable id: Long): ResponseEntity<TimeEntry> {

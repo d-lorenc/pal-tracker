@@ -1,8 +1,6 @@
 package io.pivotal.pal.tracker
 
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.ResultSetExtractor
-import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
@@ -14,7 +12,30 @@ class JdbcTimeEntryRepository(dataSource: DataSource) : TimeEntryRepository {
 
     private val jdbcTemplate: JdbcTemplate = JdbcTemplate(dataSource)
 
-    override fun create(timeEntry: TimeEntry): TimeEntry? {
+    private val timeEntryRowMapper = { rs: ResultSet, _: Int ->
+        TimeEntry(
+                rs.getLong("id"),
+                rs.getLong("project_id"),
+                rs.getLong("user_id"),
+                rs.getString("date"),
+                rs.getInt("hours")
+        )
+    }
+
+    private val timeEntryExtractor = { rs: ResultSet ->
+        if (rs.next()) timeEntryRowMapper(rs, 1) else null
+    }
+
+    override fun find(id: Long) = jdbcTemplate.query(
+            "SELECT id, project_id, user_id, date, hours FROM time_entries WHERE id = ?",
+            arrayOf(id),
+            timeEntryExtractor)
+
+    override fun list() = jdbcTemplate.query(
+            "SELECT id, project_id, user_id, date, hours FROM time_entries",
+            timeEntryRowMapper)
+
+    override fun create(timeEntry: TimeEntry): TimeEntry {
         val generatedKeyHolder = GeneratedKeyHolder()
 
         jdbcTemplate.update({ connection ->
@@ -31,18 +52,7 @@ class JdbcTimeEntryRepository(dataSource: DataSource) : TimeEntryRepository {
             statement
         }, generatedKeyHolder)
 
-        return find(generatedKeyHolder.key.toLong())
-    }
-
-    override fun find(id: Long): TimeEntry? {
-        return jdbcTemplate.query<TimeEntry>(
-                "SELECT id, project_id, user_id, date, hours FROM time_entries WHERE id = ?",
-                arrayOf<Any>(id),
-                TimeEntryExtractor())
-    }
-
-    override fun list(): List<TimeEntry> {
-        return jdbcTemplate.query("SELECT id, project_id, user_id, date, hours FROM time_entries", TimeEntryRowMapper())
+        return find(generatedKeyHolder.key.toLong())!!
     }
 
     override fun update(id: Long, timeEntry: TimeEntry): TimeEntry? {
@@ -60,22 +70,5 @@ class JdbcTimeEntryRepository(dataSource: DataSource) : TimeEntryRepository {
 
     override fun delete(id: Long) {
         jdbcTemplate.update("DELETE FROM time_entries WHERE id = ?", id)
-    }
-}
-
-class TimeEntryRowMapper : RowMapper<TimeEntry> {
-    override fun mapRow(rs: ResultSet, rowNum: Int) = TimeEntry(
-            rs.getLong("id"),
-            rs.getLong("project_id"),
-            rs.getLong("user_id"),
-            rs.getString("date"),
-            rs.getInt("hours")
-    )
-}
-
-class TimeEntryExtractor : ResultSetExtractor<TimeEntry> {
-    override fun extractData(rs: ResultSet): TimeEntry? {
-        val mapper = TimeEntryRowMapper()
-        return if (rs.next()) mapper.mapRow(rs, 1) else null
     }
 }
