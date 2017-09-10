@@ -1,7 +1,12 @@
 package io.pivotal.pal.tracker
 
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+
+@Entity(name = "time_entries")
 data class TimeEntry(
-        val id: Long?,
+        @Id @GeneratedValue val id: Long?,
         val projectId: Long,
         val userId: Long,
         val date: String?,

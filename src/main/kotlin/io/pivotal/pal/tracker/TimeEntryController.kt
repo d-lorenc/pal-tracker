@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController
 class TimeEntryController(private val timeEntriesRepo: TimeEntryRepository) {
 
     @PostMapping
-    fun create(@RequestBody timeEntry: TimeEntry) = ResponseEntity(timeEntriesRepo.create(timeEntry), HttpStatus.CREATED)
+    fun create(@RequestBody timeEntry: TimeEntry) = ResponseEntity(timeEntriesRepo.save(timeEntry), HttpStatus.CREATED)
 
     @GetMapping("{id}")
     fun read(@PathVariable id: Long): ResponseEntity<TimeEntry> {
-        val timeEntry = timeEntriesRepo.find(id)
+        val timeEntry = timeEntriesRepo.findOne(id)
         return if (timeEntry != null) {
             ResponseEntity(timeEntry, HttpStatus.OK)
         } else {
@@ -29,11 +29,11 @@ class TimeEntryController(private val timeEntriesRepo: TimeEntryRepository) {
     }
 
     @GetMapping
-    fun list() = ResponseEntity(timeEntriesRepo.list(), HttpStatus.OK)
+    fun list() = ResponseEntity(timeEntriesRepo.findAll(), HttpStatus.OK)
 
     @PutMapping("{id}")
     fun update(@PathVariable id: Long, @RequestBody timeEntry: TimeEntry): ResponseEntity<TimeEntry> {
-        val updatedTimeEntry = timeEntriesRepo.update(id, timeEntry)
+        val updatedTimeEntry = timeEntriesRepo.save(timeEntry.copy(id = id))
         return if (updatedTimeEntry != null) {
             ResponseEntity(updatedTimeEntry, HttpStatus.OK)
         } else {

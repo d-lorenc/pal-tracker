@@ -71,7 +71,7 @@ class TimeEntryApiTest {
     fun testRead() {
         val id = createTimeEntry()
 
-        val readResponse = this.restTemplate.getForEntity("/time-entries/" + id!!, String::class.java)
+        val readResponse = this.restTemplate.getForEntity("/time-entries/" + id, String::class.java)
 
         assertThat(readResponse.statusCode).isEqualTo(HttpStatus.OK)
         val readJson = parse(readResponse.body)
@@ -87,7 +87,7 @@ class TimeEntryApiTest {
         val id = createTimeEntry()
         val updatedTimeEntry = TimeEntry(2, 3, "tomorrow", 9)
 
-        val updateResponse = restTemplate.exchange("/time-entries/" + id!!, HttpMethod.PUT, HttpEntity(updatedTimeEntry, null), String::class.java)
+        val updateResponse = restTemplate.exchange("/time-entries/" + id, HttpMethod.PUT, HttpEntity(updatedTimeEntry, null), String::class.java)
 
         assertThat(updateResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -103,7 +103,7 @@ class TimeEntryApiTest {
     fun testDelete() {
         val id = createTimeEntry()
 
-        val deleteResponse = restTemplate.exchange("/time-entries/" + id!!, HttpMethod.DELETE, null, String::class.java)
+        val deleteResponse = restTemplate.exchange("/time-entries/" + id, HttpMethod.DELETE, null, String::class.java)
 
         assertThat(deleteResponse.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
 
@@ -112,5 +112,5 @@ class TimeEntryApiTest {
     }
 
     private fun createTimeEntry() =
-            restTemplate.postForObject("/time-entries", timeEntry, TimeEntry::class.java).id
+            restTemplate.postForObject("/time-entries", timeEntry, TimeEntry::class.java).id!!
 }

@@ -1,9 +1,7 @@
 package io.pivotal.pal.tracker
 
-interface TimeEntryRepository {
-    fun find(id: Long): TimeEntry?
-    fun list(): List<TimeEntry>
-    fun create(timeEntry: TimeEntry): TimeEntry
-    fun update(id: Long, timeEntry: TimeEntry): TimeEntry?
-    fun delete(id: Long)
-}
+import org.springframework.data.repository.CrudRepository
+import org.springframework.stereotype.Repository
+
+@Repository
+interface TimeEntryRepository : CrudRepository<TimeEntry, Long>
