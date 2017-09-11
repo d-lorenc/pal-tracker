@@ -8,10 +8,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -22,9 +23,10 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(classes = arrayOf(PalTrackerApplication::class), webEnvironment = RANDOM_PORT)
 class TimeEntryApiTest {
 
-    @Autowired
     private lateinit var restTemplate: TestRestTemplate
 
+    @LocalServerPort
+    private lateinit var port: String
     private val timeEntry = TimeEntry(123, 456, "today", 8)
 
     @Before
@@ -34,6 +36,12 @@ class TimeEntryApiTest {
 
         val jdbcTemplate = JdbcTemplate(dataSource)
         jdbcTemplate.execute("TRUNCATE time_entries")
+
+        val builder = RestTemplateBuilder()
+                .rootUri("http://localhost:" + port)
+                .basicAuthorization("user", "password")
+
+        restTemplate = TestRestTemplate(builder)
     }
 
     @Test

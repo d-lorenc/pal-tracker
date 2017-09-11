@@ -5,21 +5,25 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.http.HttpStatus
 import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = arrayOf(PalTrackerApplication::class), webEnvironment = RANDOM_PORT)
-class WelcomeApiTest {
-
-    private lateinit var restTemplate: TestRestTemplate
+class SecurityApiTest {
 
     @LocalServerPort
     private lateinit var port: String
+    private lateinit var authorizedRestTemplate: TestRestTemplate
+
+    @Autowired
+    private lateinit var unAuthorizedRestTemplate: TestRestTemplate
 
     @Before
     fun setUp() {
@@ -27,12 +31,20 @@ class WelcomeApiTest {
                 .rootUri("http://localhost:" + port)
                 .basicAuthorization("user", "password")
 
-        restTemplate = TestRestTemplate(builder)
+        authorizedRestTemplate = TestRestTemplate(builder)
     }
 
     @Test
-    fun exampleTest() {
-        val body = this.restTemplate.getForObject("/", String::class.java)
-        assertThat(body).isEqualTo("Hello from test")
+    fun unauthorizedTest() {
+        val response = this.unAuthorizedRestTemplate.getForEntity("/", String::class.java)
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
+    }
+
+    @Test
+    fun authorizedTest() {
+        val response = this.authorizedRestTemplate.getForEntity("/", String::class.java)
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
     }
 }
