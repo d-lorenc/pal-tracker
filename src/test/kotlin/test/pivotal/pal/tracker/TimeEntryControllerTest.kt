@@ -10,6 +10,8 @@ import io.pivotal.pal.tracker.TimeEntryRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.springframework.boot.actuate.metrics.CounterService
+import org.springframework.boot.actuate.metrics.GaugeService
 import org.springframework.http.HttpStatus
 import java.util.Arrays.asList
 
@@ -17,11 +19,13 @@ class TimeEntryControllerTest {
 
     private lateinit var timeEntryRepository: TimeEntryRepository
     private lateinit var controller: TimeEntryController
+    private val counterService: CounterService = mock()
+    private val gaugeService: GaugeService = mock()
 
     @Before
     fun setUp() {
         timeEntryRepository = mock()
-        controller = TimeEntryController(timeEntryRepository)
+        controller = TimeEntryController(timeEntryRepository, counterService, gaugeService)
     }
 
     @Test

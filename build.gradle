@@ -32,8 +32,9 @@ compileTestKotlin {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0'
     compile 'mysql:mysql-connector-java:6.0.6'
     testCompile 'com.nhaarman:mockito-kotlin:1.5.0'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -43,12 +44,14 @@ def developmentDbUrl = "jdbc:mysql://localhost:3306/tracker_dev?user=tracker&use
 bootRun.environment([
         "WELCOME_MESSAGE": "hello",
         "SPRING_DATASOURCE_URL": developmentDbUrl,
+        "MANAGEMENT_SECURITY_ENABLED": false,
 ])
 
 def testDbUrl = "jdbc:mysql://localhost:3306/tracker_test?user=tracker&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 test.environment([
         "WELCOME_MESSAGE": "Hello from test",
         "SPRING_DATASOURCE_URL": testDbUrl,
+        "MANAGEMENT_SECURITY_ENABLED": false,
 ])
 
 flyway {
