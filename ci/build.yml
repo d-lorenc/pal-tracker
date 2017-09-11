@@ -13,6 +13,9 @@ inputs:
 outputs:
   - name: build-output
 
+caches:
+  - path: .gradle/
+
 run:
   path: bash
   args:
